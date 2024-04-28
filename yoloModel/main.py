@@ -1,10 +1,10 @@
 import cv2
-# print(cv2.getBuildInformation())
+print(cv2.cuda.getCudaEnabledDeviceCount())
 print(cv2.__version__)
 import numpy as np
 
 # Load YOLO
-net = cv2.dnn.readNet("yolov4.weights", "yolov4.cfg")
+net = cv2.dnn.readNet("yolov4-tiny.weights", "yolov4-tiny.cfg")
 net.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
 net.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
 classes = []
@@ -38,7 +38,7 @@ while True:
             scores = detection[5:]
             class_id = np.argmax(scores)
             confidence = scores[class_id]
-            if confidence > 0.5:
+            if confidence > 0.7:
                 # Object detected
                 center_x = int(detection[0] * width)
                 center_y = int(detection[1] * height)
