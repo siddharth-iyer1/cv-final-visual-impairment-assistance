@@ -23,10 +23,10 @@ def captureImages(cap, cap2):
     return frames
 
 
-def getObjInFrame(frame, model):
+def getObjInFrame(name, frame, model):
     results = model(frame)
     boxes = results[0].boxes
-    obj_list = []
+    obj_list = [] 
     for box in boxes:
         obj_pred = results[0].names[int(box.cls[0].item())]
         obj_coords = box.xyxy[0].tolist()
@@ -35,7 +35,7 @@ def getObjInFrame(frame, model):
     
     annotated_frame = results[0].plot()
     annotated_frame_cv = cv2.cvtColor(np.array(annotated_frame), cv2.COLOR_RGB2BGR)
-    cv2.imshow("Images", annotated_frame_cv)
+    cv2.imshow(name, annotated_frame_cv)
 
     return obj_list
 
@@ -67,6 +67,8 @@ def matchObjects(box1, box2):
 
 
 model = YOLO('yolov8n.pt')
+model.conf = 0.5
+model.iou = 0.4
 cap = cv2.VideoCapture(0) 
 cap2 = cv2.VideoCapture(1)
 frame_rate = 5
@@ -81,17 +83,18 @@ while(1):
         prev = time.time()
 
         frames = captureImages(cap, cap2)
-        obj_in_frame1_list = getObjInFrame(frames[0], model=model)
-        obj_in_frame2_list = getObjInFrame(frames[1], model=model)
+        obj_in_frame1_list = getObjInFrame("Right Frame", frames[0], model=model)
+        obj_in_frame2_list = getObjInFrame("Left Frame", frames[1], model=model)
         matches = matchObjects(obj_in_frame1_list, obj_in_frame2_list)
         for match in matches:
-            depth = tri.find_depth(match[1][1], match[0][1], frames[1], frames[0], B, f, alpha)
+            depth = tri.find_depth(match[0][1], match[1][1], frames[0], frames[1], B, f, alpha)
             print(f"Detected '{match[0][0]}' at depth: {round((depth * 0.0393701), 1)} inches")
-        print(matches)
 
     key = cv2.waitKey(1)
     if key == 27:
         break
+    if key == ord('w'):
+        time.sleep(10)
 
 cap.release()
 cap2.release()
