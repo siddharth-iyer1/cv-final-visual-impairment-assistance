@@ -27,14 +27,6 @@ def captureImages():
     cap2.release()
     return frames
 
-def showImages(images):
-
-    fig, axs = plt.subplots(1, 2, figsize=(10, 5))
-    for i, img in enumerate(images):
-        axs[i].imshow(img)
-        axs[i].set_title(f'Image {i+1}')
-    plt.show()
-    return images
 
 def getObjInFrame(frame, model):
     results = model(frame)
@@ -46,7 +38,10 @@ def getObjInFrame(frame, model):
         pair = (obj_pred, calcCenter(obj_coords))
         obj_list.append(pair)
     
-    # annotated_frame = results[0].plot()
+    annotated_frame = results[0].plot()
+    annotated_frame_cv = cv2.cvtColor(np.array(annotated_frame), cv2.COLOR_RGB2BGR)
+    cv2.imshow("Images", annotated_frame_cv)
+
     return obj_list
 
 
