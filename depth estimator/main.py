@@ -6,6 +6,7 @@ import simpleaudio as sa
 import time
 import triangulation as tri
 from sounds import generate_sound
+from sounds import detect_side
 import undistort as calibration
 
 # Load YOLO
@@ -55,6 +56,7 @@ while True:
             net.setInput(blob)
             outs = net.forward(output_layers)
 
+
             class_ids = []
             confidences = []
             boxes = []
@@ -78,6 +80,8 @@ while True:
                         confidences.append(float(confidence))
                         # Center of bounding box
                         center_point = (int(center_x), int(center_y))
+                        
+                        sideA = detect_side(center_point, width)
 
                         if frame_name == "Right Camera":
                             object_points_right[label] = center_point
@@ -100,7 +104,7 @@ while True:
             if label in object_points_left:
                 depth = tri.find_depth(object_points_right[label], object_points_left[label], frame_right, frame_left, B, f, alpha)
                 print(f"Detected '{label}' at depth: {round((depth * 0.0393701), 1)} inches")
-                generate_sound(depth)  # Generate sound based on depth
+                generate_sound(depth, sideA)  # Generate sound based on depth
 
 
         object_points_left.clear()
