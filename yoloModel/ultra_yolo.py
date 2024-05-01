@@ -9,7 +9,7 @@ import time
 import math
     
 def captureImages():
-    cap = cv2.VideoCapture(0) 
+    cap = cv2.VideoCapture(0)
     cap2 = cv2.VideoCapture(1)
     frames = []
     ret, frame = cap.read()
