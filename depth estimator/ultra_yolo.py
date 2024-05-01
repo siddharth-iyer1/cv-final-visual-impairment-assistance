@@ -1,12 +1,9 @@
-import ultralytics
 from ultralytics import YOLO
-import torch
 import cv2
 import numpy as np
 from matplotlib import pyplot as plt
 from PIL import Image
 import time
-import math
 import triangulation as tri
 import undistort as calibration
     
@@ -69,7 +66,7 @@ def matchObjects(box1, box2):
 model = YOLO('yolov8n.pt')
 model.conf = 0.5
 model.iou = 0.4
-cap = cv2.VideoCapture(0) 
+cap = cv2.VideoCapture(2) 
 cap2 = cv2.VideoCapture(1)
 frame_rate = 5
 B = 6.35 #cm

@@ -2,8 +2,10 @@ import cv2
 print(cv2.cuda.getCudaEnabledDeviceCount())
 print(cv2.__version__)
 import numpy as np
+import simpleaudio as sa
 import time
 import triangulation as tri
+from sounds import generate_sound
 import undistort as calibration
 
 # Load YOLO
@@ -21,7 +23,7 @@ layer_names = net.getLayerNames()
 output_layers = [layer_names[i - 1] for i in net.getUnconnectedOutLayers()]
 
 # Initialize both cameras
-cap_right = cv2.VideoCapture(0)  # Camera 0
+cap_right = cv2.VideoCapture(2)  # Camera 0
 cap_left = cv2.VideoCapture(1)   # Camera 1
 
 frame_rate = 15
@@ -98,6 +100,8 @@ while True:
             if label in object_points_left:
                 depth = tri.find_depth(object_points_right[label], object_points_left[label], frame_right, frame_left, B, f, alpha)
                 print(f"Detected '{label}' at depth: {round((depth * 0.0393701), 1)} inches")
+                generate_sound(depth)  # Generate sound based on depth
+
 
         object_points_left.clear()
         object_points_right.clear()
