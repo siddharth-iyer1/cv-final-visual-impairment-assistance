@@ -1,4 +1,4 @@
-# ECE 379K Computer Vision Final Project - Assitive Technology for the Visually Impaired
+# ECE 379K Computer Vision Final Project - Assistive Technology for the Visually Impaired
 
 ### Project Flow
 
